@@ -30,14 +30,24 @@ public class UserService {
         return repo.insert(obj);
     }
 
-    public void delete(String id){
+    public void delete(String id) {
         findById(id);
         repo.deleteById(id);
+    }
+
+    public User update(User obj) {
+        Optional<User> newObj = repo.findById(obj.getId());
+        User entity = newObj.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+        updateData(entity, obj);
+        return repo.save(entity);
     }
 
     public User fromDTO(UserDTO objDTO) {
         return new User(objDTO.getId(), objDTO.getName(), objDTO.getEmail());
     }
 
-
+    public void updateData(User newObj, User obj){
+        newObj.setName(obj.getName());
+        newObj.setEmail(obj.getEmail());
+    }
 }
